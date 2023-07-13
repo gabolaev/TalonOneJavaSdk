@@ -14,105 +14,12 @@
 package one.talon.api;
 
 import one.talon.ApiException;
-import one.talon.model.Account;
-import one.talon.model.AccountAdditionalCost;
-import one.talon.model.AccountAnalytics;
-import one.talon.model.AddLoyaltyPoints;
-import one.talon.model.Application;
-import one.talon.model.ApplicationApiHealth;
-import one.talon.model.ApplicationCustomer;
-import one.talon.model.ApplicationSession;
-import one.talon.model.AsyncCouponCreationResponse;
-import one.talon.model.Attribute;
-import one.talon.model.BaseNotification;
-import java.math.BigDecimal;
-import one.talon.model.Campaign;
-import one.talon.model.CampaignCopy;
-import one.talon.model.CampaignSearch;
-import one.talon.model.Collection;
-import one.talon.model.Coupon;
-import one.talon.model.CreateTemplateCampaign;
-import one.talon.model.CreateTemplateCampaignResponse;
-import one.talon.model.CustomerActivityReport;
-import one.talon.model.CustomerAnalytics;
-import one.talon.model.CustomerProfile;
-import one.talon.model.CustomerProfileSearchQuery;
-import one.talon.model.DeductLoyaltyPoints;
-import one.talon.model.ErrorResponse;
-import one.talon.model.ErrorResponseWithStatus;
-import one.talon.model.InlineResponse20010;
-import one.talon.model.InlineResponse20011;
-import one.talon.model.InlineResponse20012;
-import one.talon.model.InlineResponse20013;
-import one.talon.model.InlineResponse20014;
-import one.talon.model.InlineResponse20015;
-import one.talon.model.InlineResponse20016;
-import one.talon.model.InlineResponse20017;
-import one.talon.model.InlineResponse20018;
-import one.talon.model.InlineResponse20019;
-import one.talon.model.InlineResponse20020;
-import one.talon.model.InlineResponse20021;
-import one.talon.model.InlineResponse20022;
-import one.talon.model.InlineResponse20023;
-import one.talon.model.InlineResponse20024;
-import one.talon.model.InlineResponse20025;
-import one.talon.model.InlineResponse20026;
-import one.talon.model.InlineResponse20027;
-import one.talon.model.InlineResponse20028;
-import one.talon.model.InlineResponse20029;
-import one.talon.model.InlineResponse2003;
-import one.talon.model.InlineResponse20030;
-import one.talon.model.InlineResponse20031;
-import one.talon.model.InlineResponse20032;
-import one.talon.model.InlineResponse20033;
-import one.talon.model.InlineResponse20034;
-import one.talon.model.InlineResponse20035;
-import one.talon.model.InlineResponse20036;
-import one.talon.model.InlineResponse20037;
-import one.talon.model.InlineResponse20038;
-import one.talon.model.InlineResponse20039;
-import one.talon.model.InlineResponse2004;
-import one.talon.model.InlineResponse20040;
-import one.talon.model.InlineResponse2005;
-import one.talon.model.InlineResponse2006;
-import one.talon.model.InlineResponse2007;
-import one.talon.model.InlineResponse2008;
-import one.talon.model.InlineResponse2009;
-import one.talon.model.LoginParams;
-import one.talon.model.LoyaltyCard;
-import one.talon.model.LoyaltyLedger;
-import one.talon.model.LoyaltyProgram;
-import one.talon.model.LoyaltyStatistics;
-import one.talon.model.ModelImport;
-import one.talon.model.NewAdditionalCost;
-import one.talon.model.NewAttribute;
-import one.talon.model.NewBaseNotification;
-import one.talon.model.NewCampaignCollection;
-import one.talon.model.NewCollection;
-import one.talon.model.NewCouponCreationJob;
-import one.talon.model.NewCoupons;
-import one.talon.model.NewCouponsForMultipleRecipients;
-import one.talon.model.NewNotificationWebhook;
-import one.talon.model.NewPassword;
-import one.talon.model.NewPasswordEmail;
-import one.talon.model.NotificationWebhook;
-import org.threeten.bp.OffsetDateTime;
-import one.talon.model.Referral;
-import one.talon.model.Role;
-import one.talon.model.Ruleset;
-import one.talon.model.Session;
-import one.talon.model.TransferLoyaltyCard;
-import one.talon.model.UpdateCampaign;
-import one.talon.model.UpdateCampaignCollection;
-import one.talon.model.UpdateCollection;
-import one.talon.model.UpdateCoupon;
-import one.talon.model.UpdateCouponBatch;
-import one.talon.model.UpdateLoyaltyCard;
-import one.talon.model.UpdateReferral;
-import one.talon.model.User;
-import one.talon.model.Webhook;
+import one.talon.ApiClient;
+import one.talon.model.*;
 import org.junit.Test;
 import org.junit.Ignore;
+import org.threeten.bp.OffsetDateTime;
+import java.math.BigDecimal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -122,7 +29,7 @@ import java.util.Map;
 /**
  * API tests for ManagementApi
  */
-@Ignore
+// @Ignore
 public class ManagementApiTest {
 
     private final ManagementApi api = new ManagementApi();
@@ -926,10 +833,23 @@ public class ManagementApiTest {
      */
     @Test
     public void getApplicationTest() throws ApiException {
-        Integer applicationId = null;
-        Application response = api.getApplication(applicationId);
+        // Management API example to load application with id 7
+        ManagementApi mApi = new ManagementApi(new ApiClient("manager_auth"));
 
-        // TODO: test validations
+        // Setup: basePath and bearer prefix
+        mApi.getApiClient().setBasePath("http://host.docker.internal:9000");
+        
+                // Setup: when using 'management_key', set apiKey & apiKeyPrefix must be provided
+        mApi.getApiClient().setApiKeyPrefix("ManagementKey-v1");
+        mApi.getApiClient().setApiKey(System.getenv("MAPI_KEY"));
+
+        try {
+            // Calling `getApplication` function with the desired id (7)
+            Application application = mApi.getApplication(1);
+            System.out.println(application.toString());
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
     
     /**
@@ -1200,11 +1120,26 @@ public class ManagementApiTest {
      */
     @Test
     public void getCampaignTest() throws ApiException {
-        Integer applicationId = null;
-        Integer campaignId = null;
-        Campaign response = api.getCampaign(applicationId, campaignId);
+        // Management API example to load application with id 7
+        ManagementApi mApi = new ManagementApi(new ApiClient("manager_auth"));
 
-        // TODO: test validations
+        // Setup: basePath and bearer prefix
+        mApi.getApiClient().setBasePath("http://host.docker.internal:9000");
+        
+                // Setup: when using 'management_key', set apiKey & apiKeyPrefix must be provided
+        mApi.getApiClient().setApiKeyPrefix("ManagementKey-v1");
+        mApi.getApiClient().setApiKey(System.getenv("MAPI_KEY"));
+
+        try {
+            Integer applicationId = 1;
+            Integer campaignId = 1;
+
+            // Calling `getCampaign` function
+            Campaign campaign = mApi.getCampaign(applicationId, campaignId);
+            System.out.println(campaign.toString());
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
     
     /**

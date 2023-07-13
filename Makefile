@@ -30,3 +30,11 @@ testenv:
 		-w "/tmp/talon-client" \
 		maven:3.5.2-jdk-9-slim \
 		/bin/bash
+
+test:
+	docker run \
+		--rm -it \
+		-v $(PWD):/tmp/talon-client \
+		-w "/tmp/talon-client" \
+		maven:3.5.2-jdk-9-slim \
+		bash -c "chmod +x ./src/test/java/one/talon/api/run.sh && IAPI_KEY=$(IAPI_KEY) MAPI_KEY=$(MAPI_KEY) ./src/test/java/one/talon/api/run.sh"

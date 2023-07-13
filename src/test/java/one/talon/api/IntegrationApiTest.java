@@ -14,51 +14,22 @@
 package one.talon.api;
 
 import one.talon.ApiException;
-import one.talon.model.Audience;
-import one.talon.model.Catalog;
-import one.talon.model.CatalogSyncRequest;
-import one.talon.model.Coupon;
-import one.talon.model.CouponReservations;
-import one.talon.model.CustomerInventory;
-import one.talon.model.CustomerProfileAudienceRequest;
-import one.talon.model.CustomerProfileIntegrationRequestV2;
-import one.talon.model.ErrorResponse;
-import one.talon.model.ErrorResponseWithStatus;
-import one.talon.model.InlineResponse200;
-import one.talon.model.InlineResponse2001;
-import one.talon.model.InlineResponse2002;
-import one.talon.model.InlineResponse201;
-import one.talon.model.IntegrationCustomerSessionResponse;
-import one.talon.model.IntegrationEventV2Request;
-import one.talon.model.IntegrationRequest;
-import one.talon.model.IntegrationState;
-import one.talon.model.IntegrationStateV2;
-import one.talon.model.LoyaltyBalances;
-import one.talon.model.LoyaltyCard;
-import one.talon.model.LoyaltyCardRegistration;
-import one.talon.model.MultipleCustomerProfileIntegrationRequest;
-import one.talon.model.MultipleCustomerProfileIntegrationResponseV2;
-import one.talon.model.NewAudience;
-import one.talon.model.NewEvent;
-import one.talon.model.NewReferral;
-import one.talon.model.NewReferralsForMultipleAdvocates;
-import org.threeten.bp.OffsetDateTime;
-import one.talon.model.Referral;
-import one.talon.model.ReopenSessionResponse;
-import one.talon.model.ReturnIntegrationRequest;
-import one.talon.model.UpdateAudience;
+import one.talon.ApiClient;
+import one.talon.model.*;
 import org.junit.Test;
 import org.junit.Ignore;
 
+import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.threeten.bp.OffsetDateTime;
 
 /**
  * API tests for IntegrationApi
  */
-@Ignore
+// @Ignore
 public class IntegrationApiTest {
 
     private final IntegrationApi api = new IntegrationApi();
@@ -356,10 +327,24 @@ public class IntegrationApiTest {
      */
     @Test
     public void reopenCustomerSessionTest() throws ApiException {
-        String customerSessionId = null;
-        ReopenSessionResponse response = api.reopenCustomerSession(customerSessionId);
+        IntegrationApi iApi = new IntegrationApi(new ApiClient("api_key_v1"));
 
-        // TODO: test validations
+        // Setup: basePath
+        iApi.getApiClient().setBasePath("http://host.docker.internal:9000");
+        // Setup: when using 'api_key_v1', set apiKey & apiKeyPrefix must be provided
+        iApi.getApiClient().setApiKeyPrefix("ApiKey-v1");
+        iApi.getApiClient().setApiKey(System.getenv("IAPI_KEY"));
+
+        String customerSessionId = "testing_java_1";
+
+        try {
+            ReopenSessionResponse response = iApi.reopenCustomerSession(customerSessionId);
+            System.out.println(response.toString());
+        } catch (ApiException e) {
+            System.out.println("are you here");
+            System.out.println(e);
+            System.out.println(e.getResponseBody());
+        }
     }
     
     /**
@@ -492,11 +477,27 @@ public class IntegrationApiTest {
      */
     @Test
     public void updateCustomerProfileV2Test() throws ApiException {
-        String integrationId = null;
-        CustomerProfileIntegrationRequestV2 body = null;
+        IntegrationApi iApi = new IntegrationApi(new ApiClient("api_key_v1"));
+
+        // Setup: basePath
+        iApi.getApiClient().setBasePath("http://host.docker.internal:9000");
+        // Setup: when using 'api_key_v1', set apiKey & apiKeyPrefix must be provided
+        iApi.getApiClient().setApiKeyPrefix("ApiKey-v1");
+        iApi.getApiClient().setApiKey(System.getenv("IAPI_KEY"));
+
+        String integrationId = "testing_nulls";
+        CustomerProfileIntegrationRequestV2 body = new CustomerProfileIntegrationRequestV2().attributes(new Gson().fromJson("{\"Name\":\"jj\"}", Object.class));
         Boolean runRuleEngine = null;
         Boolean dry = null;
-        IntegrationStateV2 response = api.updateCustomerProfileV2(integrationId, body, runRuleEngine, dry);
+
+        try {
+            IntegrationStateV2 response = iApi.updateCustomerProfileV2(integrationId, body, runRuleEngine, dry);
+            System.out.println(response.toString());
+        } catch (ApiException e) {
+            System.out.println("are you here");
+            System.out.println(e);
+            System.out.println(e.getResponseBody());
+        }
 
         // TODO: test validations
     }
@@ -528,12 +529,53 @@ public class IntegrationApiTest {
      */
     @Test
     public void updateCustomerSessionV2Test() throws ApiException {
-        String customerSessionId = null;
-        IntegrationRequest body = null;
-        Boolean dry = null;
-        IntegrationStateV2 response = api.updateCustomerSessionV2(customerSessionId, body, dry);
+        IntegrationApi iApi = new IntegrationApi(new ApiClient("api_key_v1"));
 
-        // TODO: test validations
+        // Setup: basePath
+        iApi.getApiClient().setBasePath("http://host.docker.internal:9000");
+        // Setup: when using 'api_key_v1', set apiKey & apiKeyPrefix must be provided
+        iApi.getApiClient().setApiKeyPrefix("ApiKey-v1");
+        iApi.getApiClient().setApiKey(System.getenv("IAPI_KEY"));
+
+        try {
+          // Creating a cart item object
+            CartItem cartItem = new CartItem();
+            cartItem.setName("Hawaiian Pizza");
+            cartItem.setSku("pizza-x");
+            cartItem.setQuantity(1);
+            cartItem.setPrice(new java.math.BigDecimal("5.5"));
+
+            // Creating a customer session of V2
+            NewCustomerSessionV2 customerSession = new NewCustomerSessionV2();
+            customerSession.setProfileId("Cool_Dude");
+            customerSession.addCouponCodesItem("Cool-Summer!");
+            customerSession.addCartItemsItem(cartItem);
+            // customerSession.setState(NewCustomerSessionV2.StateEnum.CLOSED);
+            // System.out.println(new Gson().fromJson("{\"test\": 1, \"another\": null}", Object.class));
+            // customerSession.setAttributes(new Gson().fromJson("{\"test\": 1, \"another\": null}", Object.class));
+            // customerSession.setAttributes(new Object());
+
+            // Initiating integration request wrapping the customer session update
+            IntegrationRequest body = new IntegrationRequest()
+                .customerSession(customerSession);
+                // Optional parameter of requested information to be present on the response related to the customer session update
+                // .responseContent(Arrays.asList(
+                //     IntegrationRequest.ResponseContentEnum.CUSTOMERSESSION,
+                //     IntegrationRequest.ResponseContentEnum.CUSTOMERPROFILE
+                // ));
+
+            // Flag to communicate whether the request is a "dry run"
+            Boolean dryRun = false;
+
+            // String customerSessionId = "testing_java_2";
+            String customerSessionId = "testing_java_1";
+            IntegrationStateV2 response = iApi.updateCustomerSessionV2(customerSessionId, body, dryRun);
+            System.out.println(response.toString());
+        } catch (ApiException e) {
+            System.out.println("are you here");
+            System.out.println(e);
+            System.out.println(e.getResponseBody());
+        }
     }
     
 }

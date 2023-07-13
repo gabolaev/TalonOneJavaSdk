@@ -1,0 +1,1 @@
+mvn test -Dtest="ManagementApiTest#getApplicationTest,IntegrationApiTest#updateCustomerSessionV2Test,IntegrationApiTest#updateCustomerProfileV2Test"
